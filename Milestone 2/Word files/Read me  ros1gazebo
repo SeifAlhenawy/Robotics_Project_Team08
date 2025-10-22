@@ -1,0 +1,195 @@
+# 1) Ensure Docker is running
+sudo systemctl start docker
+
+# 2) Allow GUI apps from the container (Gazebo/rviz)
+xhost +local:docker
+
+
+
+#  Add yourself to the docker group
+sudo usermod -aG docker $USER
+
+
+# Make the Docker socket owned by the docker group
+sudo chgrp docker /var/run/docker.sock
+
+# Apply the new group immediately (so you don’t have to reboot)
+newgrp docker
+
+# Test Docker access (should NOT need sudo)
+docker ps
+
+
+# 3) Open the project in VS Code
+code ~/ubuntu_focal
+
+
+
+
+#Inside VS Code:
+
+Press Ctrl+Shift+P → Dev Containers: Reopen in Container
+(Wait until the bottom-left is green: Dev Container: ubuntu_focal.)
+
+
+
+Inside the container terminal (VS Code → Terminal → New Terminal):
+
+# 4) Your shell already auto-sources ROS + your workspace (we added to ~/.bashrc)
+#    But if you want to be explicit:
+source /opt/ros/noetic/setup.bash
+source ~/catkin_ws/devel/setup.bash
+rosversion -d
+
+# 5) Start ROS
+roscore          # keep this running in tab 1
+
+# 6) Use another terminal tab for commands/nodes
+rostopic list
+# rviz / Gazebo if you want GUIs:
+gazebo
+
+
+
+//extra things
+extra things
+
+
+cd ~/catkin_ws
+catkin_make
+source ~/catkin_ws/devel/setup.bash
+
+
+-------------------------------------------------------
+//Source and build
+cd ~/catkin_ws
+source /opt/ros/noetic/setup.bash
+catkin_make
+source devel/setup.bash
+
+
+Terminal A
+//Spawn the robot in Gazebo
+
+roslaunch my_robot_gazebo spawn_gazebo.launch
+
+//verification
+
+rostopic list | grep gazebo
+
+
+Terminal B
+//Inspect joint and model topics
+
+rostopic echo -n1 /joint_states
+
+//verification  ists all models’ poses; scroll to your robot’s name.
+
+
+rostopic echo -n1 /gazebo/model_states
+
+
+
+
+
+//Extracts and publishes the end-effector’s pose (position + orientation) from Gazebo’s /gazebo/model_states topic
+
+code ~/catkin_ws/src/edpt_my_robot_gazebo/scripts/ee_pose_from_gazebo.py
+
+
+//Purpose: Reads joint angle commands (from topics or user input) and sends them to the Gazebo controllers /Joint_i/command.
+
+code ~/catkin_ws/src/edpt_my_robot_gazebo/scripts/kinematic_joint_driver.py
+
+
+//Purpose: Prints or verifies the URDF file path of your robot model.
+
+code ~/catkin_ws/src/edpt_my_robot_gazebo/scripts/show_urdf_path.py
+
+
+
+
+
+-----------------------------------------------------
+
+
+roslaunch my_robot_gazebo spawn_gazebo.launch
+
+
+rosrun my_robot_gazebo ee_listener.py
+
+
+//check listerner for topiv names 
+
+rostopic echo /gazebo/link_states
+
+
+rosrun my_robot_gazebo joint_publisher.py
+
+
+//verify topics really publish
+
+rostopic echo -n1 /Joint_1/command
+
+--------------------------------------------------------
+//for writing any code example
+
+roscd my_robot_gazebo/scripts
+
+code joint_publisher.py
+
+chmod +x joint_publisher.py
+
+rosrun my_robot_gazebo joint_publisher.py
+
+
+--------------------------------------------------
+//test the robot joints 
+
+
+roscd my_robot_gazebo/scripts
+pwd   # should print: /home/YOUR_USERNAME/catkin_ws/src/edpt_my_robot_gazebo/scripts
+
+
+rosrun my_robot_gazebo joint_publisher_param.py
+
+
+rosparam set Joint_1 30
+rosparam set Joint_2 30
+rosparam set Joint_3 -30
+rosparam set Joint_4 0
+rosparam set Joint_5 30
+
+
+
+rosparam set Joint_1 45
+rosparam set Joint_2 45
+rosparam set Joint_3 -45
+rosparam set Joint_4 0
+rosparam set Joint_5 45
+
+
+rosparam set Joint_1 60
+rosparam set Joint_2 60
+rosparam set Joint_3 -60
+rosparam set Joint_4 0
+rosparam set Joint_5 60
+
+
+rosparam set Joint_1 30
+rosparam set Joint_2 30
+rosparam set Joint_3 -30
+rosparam set Joint_4 0
+rosparam set Joint_5 30
+
+rosparam set Joint_1 0
+rosparam set Joint_2 90
+rosparam set Joint_3 90
+rosparam set Joint_4 0
+rosparam set Joint_5 0
+
+
+
+
+
+
