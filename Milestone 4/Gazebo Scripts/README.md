@@ -1,3 +1,17 @@
+The two new scripts for ms4 are 
+task_traj_param_node.py
+
+traj_circle_node.py
+
+
+
+
+
+
+
+
+
+
 This folder contains all the Python scripts used for validating **Forward / Inverse Position** and **Forward / Inverse Velocity** Kinematics on the simulated 5-DOF robotic arm inside **Gazebo** using ROS1 Noetic.
 
 All scripts read parameters from the ROS parameter server and compare the results with the Gazebo end-effector pose to ensure correctness.
