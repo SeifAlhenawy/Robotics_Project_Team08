@@ -1,11 +1,11 @@
 %% 1. Define time and trajectory
  t = 0:0.1:10;                  % 11 points, 1s step
-% x =  50+ 10*t;               % x goes from 100 to 150
-% y = 100*ones(size(t));       % constant y
-% z = 100*ones(size(t));   
- x = -100+100*cos(0.2*pi*t) ;              % x goes from 100 to 150
- z =-100+100*sin(0.2*pi*t) ;      % constant y
- y = 50*ones(size(t));  
+  y = 160+80*cos(0.2*pi*t) ;              % x goes from 100 to 150
+ z =0+80*sin(0.20*pi*t) ;      % constant y
+ x = 0*ones(size(t));  
+ % x = 100+40*cos(0.2*pi*t) ;              % x goes from 100 to 150
+ % z = 50+40*sin(0.2*pi*t) ;      % constant y
+ % y = 150*ones(size(t));  
  
 pos = [x; y; z];             % 3x11, each column = [x;y;z] position
 
